@@ -5,6 +5,7 @@ import NewsPage from './components/NewsPage/NewsPage';
 import ContactPage from './components/ContactPage/ContactPage';
 import AboutPage from './components/AboutPage/AboutPage';
 import Login from './components/Login/Login';
+import Register from './components/Register/Register';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path='/contact' element={<ContactPage />}/>
         <Route path='/about' element={<AboutPage />}/>
         <Route path='/login' element={<Login />}/>
+        <Route path='/register' element={<Register />}/>
       </Routes>
     </div>
   );
