@@ -20,29 +20,29 @@ export default function Register() {
                     <div className='register-form'>
                         <form>
                             <div className="mb-3 input-form-item">
-                                <label for='email'>Email</label>
+                                <label htmlFor='email'>Email</label>
                                 <input type="text" className="form-control" placeholder='Enter email' id='email' />
                             </div>
                             <div className="mb-3 input-form-item">
-                                <label for='phone'>Phone</label>
+                                <label htmlFor='phone'>Phone</label>
                                 <input type="text" className="form-control" placeholder='Enter Phone' id='phone' />
                             </div>
                             <div className="mb-3 input-form-item">
-                                <label for='username'>Username</label>
+                                <label htmlFor='username'>Username</label>
                                 <input type="text" className="form-control" placeholder='Enter username' id='username' />
                             </div>
                             <div className="mb-3 input-form-item">
-                                <label for='password'>Password</label>
+                                <label htmlFor='password'>Password</label>
                                 <input type="password" className="form-control" placeholder='Enter password' id='password' />
                             </div>
                             <div className="mb-3 input-form-item">
-                                <label for='re-password'>Re-Password</label>
+                                <label htmlFor='re-password'>Re-Password</label>
                                 <input type="password" className="form-control" placeholder='Enter re-password' id='re-password' />
                             </div>
                             <button type="submit" className="btn btn-primary register-btn">Register</button>
                         </form>
-                        <div class="separate-line"></div>
-                        <button type="button" class="btn btn-success redirect-login-btn" onClick={handleClickRedirectLogin}>You already have account</button>
+                        <div className="separate-line"></div>
+                        <button type="button" className="btn btn-success redirect-login-btn" onClick={handleClickRedirectLogin}>You already have account</button>
                     </div>
                 </div>
             </div>

@@ -25,7 +25,6 @@
 }
 
 .login-form {
-
     width: 369px;
     padding: 16px;
     border-radius: 8px;
@@ -34,7 +33,7 @@
 }
 
 .login-btn {
-    width: 100%;
+    waidth: 100%;
 }
 
 .login-forgot-password-link {
@@ -52,4 +51,8 @@
 .separate-line {
     border-top: 1px solid #dadde1;
     margin: 20px 16px;
+}
+
+@media screen {
+    
 }
