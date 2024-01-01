@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify'
 import './Register.scss';
-import axios from 'axios';
+import { registerNewUser } from '../../services/userService'
 
 export default function Register() {
 
@@ -17,6 +17,7 @@ export default function Register() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [textError, setTextError] = useState('');
     const [isValidInput, setIsValidInput] = useState({
         email: true,
         phone: true,
@@ -78,14 +79,15 @@ export default function Register() {
         setConfirmPassword('');
     }
 
-    const handleClickRegister = () => {
+    const handleClickRegister = async () => {
         if (validateInput()) {
-            freeInputData();
-            axios.post('http://localhost:8888/api/v1/create', {
-                email, phone, username, password
-            })
-                .then(() => { })
-                .catch()
+            const resData = await registerNewUser(email, phone, username, password);
+            setTextError(resData.responseMessage);
+            if(+resData.responseCode === 0) {
+                freeInputData();
+                toast.success('Register successfully');
+                navigate('/login');
+            }
         }
         // axios.get('http://localhost:8888/api/v1/api-test')
         //     .then(data => console.log(data))
@@ -109,6 +111,7 @@ export default function Register() {
                                 placeholder='Enter email'
                                 id='email'
                             />
+                            {textError === 'Email already exists!' ? <p className='text-error'>Email already exists!</p> : <></> }
                         </div>
                         <div className="mb-3 input-form-item">
                             <label htmlFor='phone'>Phone</label>
@@ -120,6 +123,7 @@ export default function Register() {
                                 placeholder='Enter Phone'
                                 id='phone'
                             />
+                            {textError === 'Phone already exists!' ? <p className='text-error'>Phone already exists!</p> : <></> }
                         </div>
                         <div className="mb-3 input-form-item">
                             <label htmlFor='username'>Username</label>
@@ -131,6 +135,7 @@ export default function Register() {
                                 placeholder='Enter username'
                                 id='username'
                             />
+                            {textError === 'Username already exists!' ? <p className='text-error'>Username already exists!</p> : <></> }
                         </div>
                         <div className="mb-3 input-form-item">
                             <label htmlFor='password'>Password</label>

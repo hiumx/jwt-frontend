@@ -24,6 +24,11 @@
     align-items: center;
 }
 
+.login-form-title {
+    color: #0d6efd;
+    margin: 16px 0 32px 0;
+}
+
 .login-form {
     width: 369px;
     padding: 16px;
@@ -33,7 +38,7 @@
 }
 
 .login-btn {
-    waidth: 100%;
+    width: 100%;
 }
 
 .login-forgot-password-link {
