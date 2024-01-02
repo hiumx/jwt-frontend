@@ -9,4 +9,13 @@ const registerNewUser = (email, phone, username, password) => {
         .catch()
 }
 
-export { registerNewUser }
+const userLogin = (keyLogin, password) => {
+    return axios.post('http://localhost:8888/api/v1/login', {
+        keyLogin,
+        password
+    })
+        .then((res) => res.data)
+        .catch()
+}
+
+export { registerNewUser, userLogin }
