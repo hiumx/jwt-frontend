@@ -1,13 +1,22 @@
-import React from 'react'
+import { NavLink, useLocation } from 'react-router-dom';
+import _ from 'lodash';
 import './Nav.scss';
-import { NavLink } from 'react-router-dom';
 export default function Nav() {
+
+    const account = JSON.parse(sessionStorage.getItem('account'));
+    const location = useLocation();
+
     return (
-        <div className="topnav">
-            <NavLink to="/">Home</NavLink>
-            <NavLink to="/news">News</NavLink>
-            <NavLink to="/contact">Contact</NavLink>
-            <NavLink to="/about">About</NavLink>
-        </div>
+        <>
+            {account && !_.isEmpty(account) && account.isAuthenticated && location.pathname !== '/login' &&
+                <div className="topnav">
+                    <NavLink to="/">Home</NavLink>
+                    <NavLink to="/manager-users">Users</NavLink>
+                    <NavLink to="/manager-projects">Projects</NavLink>
+                    <NavLink to="/about">About</NavLink>
+                </div>
+        }
+        </>
+
     )
 }

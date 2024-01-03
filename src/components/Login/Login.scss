@@ -58,6 +58,12 @@
     margin: 20px 16px;
 }
 
-@media screen {
-    
+@media screen and (max-width: 767px) {
+    .login-content {
+        display: block !important;
+    }
+
+    .login-wrapper-title {
+        padding: 50px 0;
+    }
 }
