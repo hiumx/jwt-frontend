@@ -18,9 +18,31 @@ const userLogin = (keyLogin, password) => {
         .catch()
 }
 
+// User
+
 const getAllUsers = async (page, limit) => {
     const res = await axios.get(`http://localhost:8888/api/v1/users/get-all?page=${page}&limit=${limit}`)
     return res.data.responseData;
 }
 
-export { registerNewUser, userLogin, getAllUsers}
+const createUser = async (userData) => {
+    return await axios.post('http://localhost:8888/api/v1/users', userData)
+
+}
+
+const deleteUser = async (id) => {
+    return await axios.delete('http://localhost:8888/api/v1/users/delete', {
+        data: { id }
+    })
+
+}
+
+// Group user
+const getAllGroupUser = async () => {
+    const res = await axios.get('http://localhost:8888/api/v1/group-user/all');
+    return res.data.responseData;
+}
+
+
+export { registerNewUser, userLogin, getAllUsers, createUser, deleteUser }
+export { getAllGroupUser }

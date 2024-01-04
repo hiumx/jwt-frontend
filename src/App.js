@@ -1,6 +1,5 @@
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useState } from 'react';
 import './App.scss';
 import Nav from './components/Nav/Nav';
 import AppRoutes from './routes/AppRoutes';

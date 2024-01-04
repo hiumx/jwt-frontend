@@ -2,7 +2,10 @@ import { useEffect, useState } from 'react';
 import ReactPaginate from 'react-paginate';
 
 import './ManagerUser.scss';
-import { getAllUsers } from '../../services/userService';
+import { getAllUsers, deleteUser, createUser } from '../../services/userService';
+import ModalConfirm from '../Modal/ModalConfirm';
+import { toast } from 'react-toastify';
+import ModalUser from '../Modal/ModalUser';
 
 const ManagerUser = () => {
 
@@ -10,6 +13,9 @@ const ManagerUser = () => {
     const [pageShow, setPageShow] = useState(1);
     const [limitShow, setLimitShow] = useState(4);
     const [countPage, setCountPage] = useState(1);
+    const [isShowModalDelete, setIsShowModalDelete] = useState(false);
+    const [isShowModalCreate, setIsShowModalCreate] = useState(false);
+    const [idDeleteModal, setIdDeleteModal] = useState(0);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -22,7 +28,7 @@ const ManagerUser = () => {
             }
         }
         fetchData();
-    }, [pageShow, limitShow])
+    }, [pageShow, limitShow, listUsers.length])
 
     const handleClickRefresh = () => {
         window.location.reload();
@@ -32,14 +38,74 @@ const ManagerUser = () => {
         setPageShow(e.selected + 1);
     }
 
+    const handleDeleteUser = (id) => {
+        setIsShowModalDelete(true);
+        setIdDeleteModal(id);
+
+    }
+
+    const confirmDeleteUser = async () => {
+        try {
+            const res = await deleteUser(idDeleteModal);
+            setIsShowModalDelete(false);
+
+            if (+res.data.responseCode === 0) {
+                const usersRemainder = listUsers.filter(user => user.id != idDeleteModal);
+                if (usersRemainder.length === 0) {
+                    setCountPage(prev => prev - 1);
+                    setPageShow(prev => prev - 1);
+                }
+                setListUsers(usersRemainder);
+                toast.success('Delete user successfully');
+            } else {
+                toast.error('Delete user failure!');
+            }
+        } catch (error) {
+            toast.error('Something wrong from server!');
+        }
+    }
+
+    const handleShowModalDelete = () => {
+        setIsShowModalDelete(true);
+    }
+
+    const handleCloseModalDelete = () => {
+        setIsShowModalDelete(false);
+    }
+
+    const handleClickCreate = () => {
+        setIsShowModalCreate(true)
+    }
+
+    const handleCloseModal = () => {
+        setIsShowModalCreate(false)
+    }
+
+    const handleCreateUser = async (inputData) => {
+        try {
+            const res = await createUser(inputData);
+            if (res.data.responseCode === 0) {
+                setListUsers(prev => [...prev, res.data.responseData])
+                if (listUsers.length + 1 > limitShow) {
+                    setPageShow(prev => prev + 1);
+                }
+                setIsShowModalCreate(false);
+                toast.success('Create new user successfully')
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+
     return (
         <div className="users__management__container">
             <h2 className="users__management__title">Users management</h2>
             <div className="users__management__btn">
+                <button className="btn btn-primary" onClick={handleClickCreate}>Create new user</button>
                 <button className="btn btn-success" onClick={handleClickRefresh}>Refresh</button>
-                <button className="btn btn-primary">Create new user</button>
             </div>
-            <div className="wrapper__table">
+            <div className="table-responsive-md able-responsive-sm wrapper__table">
                 <table className="table table-bordered table-hover">
                     <thead>
                         <tr>
@@ -55,18 +121,29 @@ const ManagerUser = () => {
                     </thead>
                     <tbody>
                         {listUsers.map((user, index) => {
+                            let i = (pageShow - 1) * limitShow + index + 1;
                             return (
                                 <tr key={index}>
-                                    <th scope="row">{index + 1}</th>
-                                    <td>{user.name ? user.name : 'Unknown'}</td>
+                                    <th scope="row">{i}</th>
+                                    <td>{user.username ? user.username : 'Unknown'}</td>
                                     <td>{user.email ? user.email : 'Unknown'}</td>
                                     <td>{user.address ? user.address : 'Unknown'}</td>
                                     <td>{user.phone ? user.phone : 'Unknown'}</td>
                                     <td>{user.gender ? user.gender : 'Unknown'}</td>
-                                    <td>{user['Group_User.description'] ? user['Group_User.description'] : 'Unknown'}</td>
+                                    <td>{user['Group_User.name'] ? user['Group_User.name'] : 'Unknown'}</td>
                                     <td>
-                                        <button className='btn btn-info user__update__btn'>Update</button>
-                                        <button className='btn btn-danger user__delete__btn'>Delete</button>
+                                        <button
+                                            className='btn btn-info user__update__btn'
+                                        // onClick={handleClickUpdate}
+                                        >
+                                            Update
+                                        </button>
+                                        <button
+                                            className='btn btn-danger user__delete__btn'
+                                            onClick={() => handleDeleteUser(user.id)}
+                                        >
+                                            Delete
+                                        </button>
                                     </td>
                                 </tr>
                             )
@@ -97,6 +174,22 @@ const ManagerUser = () => {
                 </div>
 
             </div>
+            <ModalConfirm
+                heading='Delete user ?'
+                message='Are you sure to delete this user ?'
+                contentActionBtn='Delete'
+                isShowModalDelete={isShowModalDelete}
+                handleShowModalDelete={handleShowModalDelete}
+                handleCloseModalDelete={handleCloseModalDelete}
+                handleAction={confirmDeleteUser}
+            />
+
+            <ModalUser
+                isShowModalCreate={isShowModalCreate}
+                heading='Create new user'
+                handleAction={handleCreateUser}
+                handleCloseModal={handleCloseModal}
+            />
         </div>
     );
 };
