@@ -1,0 +1,37 @@
+.users__management__title {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.users__management__btn {
+    float: right;
+    margin-bottom: 30px;
+}
+
+.users__management__btn button{
+    margin-right: 20px;
+}
+
+.wrapper__table {
+    margin: 40px 20px 0;
+}
+
+
+.user__update__btn {
+    margin: 0 4px;
+}
+
+.user__delete__btn {
+    margin: 0 4px;
+}
+
+.paginate {
+    position: fixed;
+    bottom: 2%;
+    right: 1%;
+    width: 100%;
+}
+
+.paginate > ul{
+    justify-content: center;
+}

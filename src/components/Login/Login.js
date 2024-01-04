@@ -41,7 +41,7 @@ export default function Login() {
                 }
                 sessionStorage.setItem('account', JSON.stringify(dataSessionStorage));
 
-                navigate('/manager-user');
+                navigate('/manager-users');
             } else if (+resData.responseCode === -1) {
                 toast.error(resData.responseMessage);
             }
