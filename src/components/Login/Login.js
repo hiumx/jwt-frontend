@@ -1,5 +1,5 @@
 import { Navigate, useNavigate } from 'react-router-dom'
-import {  useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import './Login.scss';
@@ -49,8 +49,10 @@ export default function Login() {
     }
 
     const handleKeyDownKeyLogin = e => {
-        if (e.keyCode === 13) {
+        if (e.keyCode === 13 && passwordInputElement.current.value === '') {
             passwordInputElement.current.focus();
+        } else if (e.keyCode === 13 && passwordInputElement.current.value !== '') {
+            handleClickLogin();
         }
     }
 

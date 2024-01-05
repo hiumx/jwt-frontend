@@ -1,9 +1,7 @@
 
 const ManagerProject = () => {
     return (
-        <div>
-            <h1>Manager Projects Page</h1>
-        </div>
+        <div>Manager Projects Page</div>
     );
 };
 

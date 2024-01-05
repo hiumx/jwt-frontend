@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import ReactPaginate from 'react-paginate';
 
 import './ManagerUser.scss';
-import { getAllUsers, deleteUser, createUser } from '../../services/userService';
+import { getAllUsers, deleteUser, createUser, getUserById, updateUser } from '../../services/userService';
 import ModalConfirm from '../Modal/ModalConfirm';
 import { toast } from 'react-toastify';
 import ModalUser from '../Modal/ModalUser';
@@ -13,9 +13,13 @@ const ManagerUser = () => {
     const [pageShow, setPageShow] = useState(1);
     const [limitShow, setLimitShow] = useState(4);
     const [countPage, setCountPage] = useState(1);
+    const [isShowModal, setIsShowModal] = useState(false);
     const [isShowModalDelete, setIsShowModalDelete] = useState(false);
-    const [isShowModalCreate, setIsShowModalCreate] = useState(false);
+
+    const [userData, setUserData] = useState({});
     const [idDeleteModal, setIdDeleteModal] = useState(0);
+
+    const [actionModal, setActionModal] = useState('CREATE');
 
     useEffect(() => {
         const fetchData = async () => {
@@ -37,8 +41,63 @@ const ManagerUser = () => {
     const handlePageClick = (e) => {
         setPageShow(e.selected + 1);
     }
+    
+    const handleCloseModal = () => {
+        setIsShowModal(false);
+    }
+    
+    const handleClickCreate = () => {
+        setIsShowModal(true);
+        setActionModal('CREATE');
+    }
+
+    const handleCreateUser = async (inputData) => {
+        try {
+            const res = await createUser(inputData);
+            if (res.data.responseCode === 0) {
+                setListUsers(prev => [...prev, res.data.responseData])
+                if (listUsers.length + 1 > limitShow) {
+                    setPageShow(prev => prev + 1);
+                }
+                setIsShowModal(false);
+                toast.success('Create new user successfully')
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const handleClickUpdate = async (user) => {
+        setActionModal('UPDATE');
+        setIsShowModal(true);
+        setUserData(user);
+    }
+
+    const handleConfirmUpdate = async (userData) => {
+        const { username, address, gender, groupId, groupUsers } = userData;
+        try {
+            const res = await updateUser(userData.id, { username, address, gender, groupId });
+            if (res.data.responseCode === 0) {
+                setIsShowModal(false);
+                toast.success(res.data.responseMessage);
+                const listUsersAfterUpdate = listUsers.map(user => {
+                    if (user.id === userData.id) {
+                        user.username = username;
+                        user.address = address;
+                        user.gender = gender;
+                        user['Group_User.name'] = groupUsers[groupId - 1].name;
+                    }
+                    return user;
+                });
+                setListUsers(listUsersAfterUpdate);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     const handleDeleteUser = (id) => {
+        setActionModal('DELETE');
         setIsShowModalDelete(true);
         setIdDeleteModal(id);
 
@@ -50,7 +109,7 @@ const ManagerUser = () => {
             setIsShowModalDelete(false);
 
             if (+res.data.responseCode === 0) {
-                const usersRemainder = listUsers.filter(user => user.id != idDeleteModal);
+                const usersRemainder = listUsers.filter(user => user.id !== idDeleteModal);
                 if (usersRemainder.length === 0) {
                     setCountPage(prev => prev - 1);
                     setPageShow(prev => prev - 1);
@@ -73,30 +132,6 @@ const ManagerUser = () => {
         setIsShowModalDelete(false);
     }
 
-    const handleClickCreate = () => {
-        setIsShowModalCreate(true)
-    }
-
-    const handleCloseModal = () => {
-        setIsShowModalCreate(false)
-    }
-
-    const handleCreateUser = async (inputData) => {
-        try {
-            const res = await createUser(inputData);
-            if (res.data.responseCode === 0) {
-                setListUsers(prev => [...prev, res.data.responseData])
-                if (listUsers.length + 1 > limitShow) {
-                    setPageShow(prev => prev + 1);
-                }
-                setIsShowModalCreate(false);
-                toast.success('Create new user successfully')
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
 
     return (
         <div className="users__management__container">
@@ -110,7 +145,7 @@ const ManagerUser = () => {
                     <thead>
                         <tr>
                             <th scope="col">#</th>
-                            <th scope="col">Name</th>
+                            <th scope="col">Username</th>
                             <th scope="col">Email</th>
                             <th scope="col">Address</th>
                             <th scope="col">Phone</th>
@@ -134,7 +169,7 @@ const ManagerUser = () => {
                                     <td>
                                         <button
                                             className='btn btn-info user__update__btn'
-                                        // onClick={handleClickUpdate}
+                                            onClick={() => handleClickUpdate(user)}
                                         >
                                             Update
                                         </button>
@@ -185,10 +220,11 @@ const ManagerUser = () => {
             />
 
             <ModalUser
-                isShowModalCreate={isShowModalCreate}
-                heading='Create new user'
-                handleAction={handleCreateUser}
+                isShowModal={isShowModal}
+                actionModal={actionModal}
+                handleAction={actionModal === 'CREATE' ? handleCreateUser : handleConfirmUpdate}
                 handleCloseModal={handleCloseModal}
+                userData={actionModal === 'CREATE' ? {} : userData}
             />
         </div>
     );

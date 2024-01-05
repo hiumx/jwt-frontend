@@ -25,15 +25,21 @@ const getAllUsers = async (page, limit) => {
     return res.data.responseData;
 }
 
+const getUserById = async (id) => {
+    const res = await axios.get(`http://localhost:8888/api/v1/users/${id}`)
+    return res.data.responseData;
+}
+
 const createUser = async (userData) => {
     return await axios.post('http://localhost:8888/api/v1/users', userData)
+}
 
+const updateUser = async (id, userData) => {
+    return await axios.patch(`http://localhost:8888/api/v1/users/${id}`, userData)
 }
 
 const deleteUser = async (id) => {
-    return await axios.delete('http://localhost:8888/api/v1/users/delete', {
-        data: { id }
-    })
+    return await axios.delete(`http://localhost:8888/api/v1/users/${id}`)
 
 }
 
@@ -44,5 +50,5 @@ const getAllGroupUser = async () => {
 }
 
 
-export { registerNewUser, userLogin, getAllUsers, createUser, deleteUser }
+export { registerNewUser, userLogin, getAllUsers, getUserById, createUser, updateUser, deleteUser }
 export { getAllGroupUser }
