@@ -30,7 +30,7 @@ function ModalUser(props) {
     useEffect(() => {
         async function fetchGroupUsers() {
             const res = await getAllGroupUser();
-            setGroupUsers(res);
+            setGroupUsers(res.responseData);
         }
         fetchGroupUsers();
     }, [])

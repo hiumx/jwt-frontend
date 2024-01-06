@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import ReactPaginate from 'react-paginate';
 
 import './ManagerUser.scss';
-import { getAllUsers, deleteUser, createUser, getUserById, updateUser } from '../../services/userService';
+import { getAllUsers, deleteUser, createUser, updateUser } from '../../services/userService';
 import ModalConfirm from '../Modal/ModalConfirm';
 import { toast } from 'react-toastify';
 import ModalUser from '../Modal/ModalUser';
@@ -24,9 +24,9 @@ const ManagerUser = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const result = await getAllUsers(pageShow, limitShow);
-                setListUsers(result.users);
-                setCountPage(result.pageCount)
+                const res = await getAllUsers(pageShow, limitShow);
+                setListUsers(res.responseData.users);
+                setCountPage(res.responseData.pageCount)
             } catch (error) {
                 console.log(error);
             }
@@ -54,15 +54,15 @@ const ManagerUser = () => {
     const handleCreateUser = async (inputData) => {
         try {
             const res = await createUser(inputData);
-            if (res.data.responseCode === 0) {
-                setListUsers(prev => [...prev, res.data.responseData])
+            if (res.responseCode === 0) {
+                setListUsers(prev => [...prev, res.responseData])
                 if (listUsers.length + 1 > limitShow) {
                     setPageShow(prev => prev + 1);
                 }
                 setIsShowModal(false);
-                toast.success('Create new user successfully')
-            } else if (res.data.responseCode === -1) {
-                toast.error(res.data.responseMessage);
+                toast.success(res.responseMessage)
+            } else if (res.responseCode === -1) {
+                toast.error(res.responseMessage);
             }
         } catch (error) {
             console.log(error);
@@ -79,9 +79,9 @@ const ManagerUser = () => {
         const { username, address, gender, groupId, groupUsers } = userData;
         try {
             const res = await updateUser(userData.id, { username, address, gender, groupId });
-            if (res.data.responseCode === 0) {
+            if (res.responseCode === 0) {
                 setIsShowModal(false);
-                toast.success(res.data.responseMessage);
+                toast.success(res.responseMessage);
                 const listUsersAfterUpdate = listUsers.map(user => {
                     if (user.id === userData.id) {
                         user.username = username;
@@ -92,8 +92,8 @@ const ManagerUser = () => {
                     return user;
                 });
                 setListUsers(listUsersAfterUpdate);
-            } else if (res.data.responseCode === -1) {
-                toast.error(res.data.responseMessage);
+            } else if (res.responseCode === -1) {
+                toast.error(res.responseMessage);
             }
         } catch (error) {
             console.log(error);
@@ -112,7 +112,7 @@ const ManagerUser = () => {
             const res = await deleteUser(idDeleteModal);
             setIsShowModalDelete(false);
 
-            if (+res.data.responseCode === 0) {
+            if (+res.responseCode === 0) {
                 const usersRemainder = listUsers.filter(user => user.id !== idDeleteModal);
                 if (usersRemainder.length === 0) {
                     setCountPage(prev => prev - 1);
@@ -143,7 +143,7 @@ const ManagerUser = () => {
             <div className="users__management__btn">
                 <button className="btn btn-primary" onClick={handleClickCreate}>
                     <span className='add-user-icon'>
-                    <i class="fa-solid fa-user-plus"></i>
+                    <i className="fa-solid fa-user-plus"></i>
                     </span>
                     Create new user
                 </button>
@@ -185,13 +185,13 @@ const ManagerUser = () => {
                                             className='user__update__icon'
                                             onClick={() => handleClickUpdate(user)}
                                         >
-                                            <i class="fa-solid fa-user-pen"></i>
+                                            <i className="fa-solid fa-user-pen"></i>
                                         </span>
                                         <span
                                             className='user__delete__icon'
                                             onClick={() => handleDeleteUser(user.id)}
                                         >
-                                            <i class="fa-solid fa-trash"></i>
+                                            <i className="fa-solid fa-trash"></i>
                                         </span>
                                     </td>
                                 </tr>
