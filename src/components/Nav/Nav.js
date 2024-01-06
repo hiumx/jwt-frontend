@@ -10,12 +10,32 @@ export default function Nav() {
         <>
             {account && !_.isEmpty(account) && account.isAuthenticated && location.pathname !== '/login' &&
                 <div className="topnav">
-                    <NavLink to="/">Home</NavLink>
-                    <NavLink to="/manager-users">Users</NavLink>
-                    <NavLink to="/manager-projects">Projects</NavLink>
-                    <NavLink to="/about">About</NavLink>
+                    <NavLink to="/">
+                        <span className='nav-icon'>
+                            <i class="fa-solid fa-house"></i>
+                        </span>
+                        Home
+                    </NavLink>
+                    <NavLink to="/manager-users">
+                        <span className='nav-icon'>
+                            <i class="fa-solid fa-user"></i>
+                        </span>
+                        Users
+                    </NavLink>
+                    <NavLink to="/manager-projects">
+                        <span className='nav-icon'>
+                            <i class="fa-solid fa-diagram-project"></i>
+                        </span>
+                        Projects
+                    </NavLink>
+                    <NavLink to="/about">
+                        <span className='nav-icon'>
+                            <i class="fa-solid fa-address-card"></i>
+                        </span>
+                        About
+                    </NavLink>
                 </div>
-        }
+            }
         </>
 
     )

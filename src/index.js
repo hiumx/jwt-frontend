@@ -4,7 +4,7 @@ import { BrowserRouter as Router } from 'react-router-dom'
 import './index.css';
 import App from './App';
 import 'bootstrap/dist/css/bootstrap.css';
-
+import '@fortawesome/fontawesome-free/js/all.js';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

@@ -41,11 +41,11 @@ const ManagerUser = () => {
     const handlePageClick = (e) => {
         setPageShow(e.selected + 1);
     }
-    
+
     const handleCloseModal = () => {
         setIsShowModal(false);
     }
-    
+
     const handleClickCreate = () => {
         setIsShowModal(true);
         setActionModal('CREATE');
@@ -61,6 +61,8 @@ const ManagerUser = () => {
                 }
                 setIsShowModal(false);
                 toast.success('Create new user successfully')
+            } else if (res.data.responseCode === -1) {
+                toast.error(res.data.responseMessage);
             }
         } catch (error) {
             console.log(error);
@@ -90,6 +92,8 @@ const ManagerUser = () => {
                     return user;
                 });
                 setListUsers(listUsersAfterUpdate);
+            } else if (res.data.responseCode === -1) {
+                toast.error(res.data.responseMessage);
             }
         } catch (error) {
             console.log(error);
@@ -134,11 +138,21 @@ const ManagerUser = () => {
 
 
     return (
-        <div className="users__management__container">
+        <div className="users__management__container container">
             <h2 className="users__management__title">Users management</h2>
             <div className="users__management__btn">
-                <button className="btn btn-primary" onClick={handleClickCreate}>Create new user</button>
-                <button className="btn btn-success" onClick={handleClickRefresh}>Refresh</button>
+                <button className="btn btn-primary" onClick={handleClickCreate}>
+                    <span className='add-user-icon'>
+                    <i class="fa-solid fa-user-plus"></i>
+                    </span>
+                    Create new user
+                </button>
+                <button className="btn btn-success" onClick={handleClickRefresh}>
+                    <span className='refresh-icon'>
+                        <i className="fa-solid fa-arrow-rotate-right"></i>
+                    </span>
+                    Refresh
+                </button>
             </div>
             <div className="table-responsive-md able-responsive-sm wrapper__table">
                 <table className="table table-bordered table-hover">
@@ -167,18 +181,18 @@ const ManagerUser = () => {
                                     <td>{user.gender ? user.gender : 'Unknown'}</td>
                                     <td>{user['Group_User.name'] ? user['Group_User.name'] : 'Unknown'}</td>
                                     <td>
-                                        <button
-                                            className='btn btn-info user__update__btn'
+                                        <span
+                                            className='user__update__icon'
                                             onClick={() => handleClickUpdate(user)}
                                         >
-                                            Update
-                                        </button>
-                                        <button
-                                            className='btn btn-danger user__delete__btn'
+                                            <i class="fa-solid fa-user-pen"></i>
+                                        </span>
+                                        <span
+                                            className='user__delete__icon'
                                             onClick={() => handleDeleteUser(user.id)}
                                         >
-                                            Delete
-                                        </button>
+                                            <i class="fa-solid fa-trash"></i>
+                                        </span>
                                     </td>
                                 </tr>
                             )

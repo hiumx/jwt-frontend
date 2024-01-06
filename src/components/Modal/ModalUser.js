@@ -95,7 +95,7 @@ function ModalUser(props) {
         if (validateUserInput()) {
             if (props.actionModal === 'CREATE') {
                 props.handleAction({ email, phone, username, address, password, gender, groupId });
-                freeInputData();
+                // freeInputData();
             } else if (props.actionModal === 'UPDATE') {
                 const userIdUpdate = props.userData.id;
                 props.handleAction({ id: userIdUpdate, username, address, gender, groupId, groupUsers });
