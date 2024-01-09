@@ -1,15 +1,18 @@
 import { Navigate, useNavigate } from 'react-router-dom'
-import { useRef, useState } from 'react';
+import { useContext, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import './Login.scss';
 import { userLogin } from '../../services/userService';
+import { AuthContext } from '../../contexts/AuthProvider';
 
 export default function Login() {
     const navigate = useNavigate();
     const [keyLogin, setKeyLogin] = useState('');
     const [password, setPassword] = useState('');
     const passwordInputElement = useRef();
+
+    const authContext = useContext(AuthContext);
 
     const handleClickRegister = () => {
         navigate('/register')
@@ -35,11 +38,12 @@ export default function Login() {
             if (+resData.responseCode === 0) {
                 toast.success(resData.responseMessage);
 
-                const dataSessionStorage = {
+                authContext.login({
                     isAuthenticated: true,
-                    token: 'Fake token'
-                }
-                sessionStorage.setItem('account', JSON.stringify(dataSessionStorage));
+                    role: resData.responseData.userData.name,
+                    username: resData.responseData.username,
+                    accessToken: resData.responseData.accessToken
+                });
 
                 navigate('/manager-users');
             } else if (+resData.responseCode === -1) {
@@ -62,11 +66,10 @@ export default function Login() {
         }
     }
 
-    const account = JSON.parse(sessionStorage.getItem('account'));
 
     return (
         <>
-            {account && account.isAuthenticated ? <Navigate to='/' /> :
+            {authContext.userContext && authContext.userContext.isAuthenticated ? <Navigate to='/' /> :
                 <div className='container login-container'>
                     <div className='row login-content'>
                         <div className='col-lg-6 col-md-12 col-sm-12 login-wrapper-title'>

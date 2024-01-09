@@ -1,4 +1,5 @@
 import axios from "axios";
+import { toast } from "react-toastify";
 
 // Set config defaults when creating the instance
 const instance = axios.create({
@@ -7,6 +8,8 @@ const instance = axios.create({
   
   // Alter defaults after instance has been created
 //   instance.defaults.headers.common['Authorization'] = AUTH_TOKEN;
+
+instance.defaults.withCredentials = true;
 
 // Add a request interceptor
 instance.interceptors.request.use(function (config) {
@@ -23,8 +26,18 @@ instance.interceptors.response.use(function (response) {
     // Do something with response data
     return response.data;
   }, function (error) {
-    // Any status codes that falls outside the range of 2xx cause this function to trigger
-    // Do something with response error
+    switch (error.response.status) {
+      case 401:
+        toast.error('Unauthenticated! Please login');
+        window.location.href = '/login';
+        break;
+      case 403:
+        toast.error('Permission denied!');
+        break;
+      default:
+
+        break;
+    }
     return Promise.reject(error);
   });
 

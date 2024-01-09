@@ -124,7 +124,7 @@ const ManagerUser = () => {
                 toast.error('Delete user failure!');
             }
         } catch (error) {
-            toast.error('Something wrong from server!');
+            console.log(error);
         }
     }
 

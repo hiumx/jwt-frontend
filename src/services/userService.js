@@ -17,7 +17,7 @@ const userLogin = async (keyLogin, password) => {
 // User
 
 const getAllUsers = async (page, limit) => {
-    return await axios.get(`/api/v1/users/get-all?page=${page}&limit=${limit}`)
+    return await axios.get(`/api/v1/users?page=${page}&limit=${limit}`)
 }
 
 const getUserById = async (id) => {
