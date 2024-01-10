@@ -5,8 +5,6 @@ import Nav from './components/Nav/Nav';
 import AppRoutes from './routes/AppRoutes';
 
 function App() {
-
-  // const [isLoginSuccess, setIsLoginSuccess] = useState(false);
   
   return (
     <div className="app-container">

@@ -45,7 +45,7 @@ export default function Login() {
                     accessToken: resData.responseData.accessToken
                 });
 
-                navigate('/manager-users');
+                navigate('/users');
             } else if (+resData.responseCode === -1) {
                 toast.error(resData.responseMessage);
             }

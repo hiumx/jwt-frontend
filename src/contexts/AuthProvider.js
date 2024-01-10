@@ -1,4 +1,7 @@
-const { createContext, useState, useContext } = require("react");
+import { useNavigate } from "react-router-dom";
+import { getInfoAccount } from "../services/userService";
+
+const { createContext, useState, useContext, useEffect } = require("react");
 
 const AuthContext = createContext();
 
@@ -10,6 +13,8 @@ const AuthProvider = ({ children }) => {
         isAuthenticated: false,
         accessToken: ''
     });
+
+    const navigate = useNavigate();
 
     const login = (userData) => {
         setUserContext(userData);
@@ -23,6 +28,25 @@ const AuthProvider = ({ children }) => {
             accessToken: ''
         })
     }
+
+    useEffect(() => {
+        const fetchInfoAccount = async () => {
+            const resData = await getInfoAccount();
+            if(resData.responseCode === 0) {
+                const userInfo = {
+                    isAuthenticated: true,
+                    role: resData.responseData.userData.name,
+                    username: resData.responseData.username,
+                    accessToken: ''
+                }
+                setUserContext(userInfo);
+            } else if(resData.responseCode === -1) {
+                setUserContext({...userContext, isAuthenticated: false});
+                navigate('/login');
+            }
+        }
+        fetchInfoAccount();
+    }, [])
 
     return (
         <AuthContext.Provider value={{ userContext, login, logout }}>

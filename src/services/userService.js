@@ -41,5 +41,9 @@ const getAllGroupUser = async () => {
     return await axios.get('/api/v1/group-user/all')
 }
 
+const getInfoAccount = async () => {
+    return await axios.get('/api/v1/account');
+}
+
 export { registerNewUser, userLogin, getAllUsers, getUserById, createUser, updateUser, deleteUser }
-export { getAllGroupUser }
+export { getAllGroupUser, getInfoAccount }

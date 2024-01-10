@@ -20,7 +20,7 @@ export default function Nav() {
                             </span>
                             Home
                         </NavLink>
-                        <NavLink to="/manager-users">
+                        <NavLink to="/users">
                             <span className='nav-icon'>
                                 <i className="fa-solid fa-user"></i>
                             </span>
