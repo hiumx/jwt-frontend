@@ -1,17 +1,24 @@
-import { NavLink, useLocation } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import _ from 'lodash';
-import './Nav.scss';
+import './NavHeader.scss';
 import { useContext } from 'react';
 import { AuthContext } from '../../contexts/AuthProvider';
 
-export default function Nav() {
+export default function NavHeader() {
 
     const location = useLocation();
     const authContext = useContext(AuthContext);
 
+    const {username, role, isAuthenticated} = authContext.userContext;
+
+    const handleClickLogout = () => {
+        authContext.logout();
+        localStorage.removeItem('jwtToken');
+    }
+
     return (
         <>
-            {authContext && !_.isEmpty(authContext.userContext) && authContext.userContext.isAuthenticated && location.pathname !== '/login' &&
+            {authContext && !_.isEmpty(authContext.userContext) && location.pathname !== '/login' &&
                 <div className="topnav">
                     <div className='navigate'>
                         <NavLink to="/">
@@ -40,17 +47,18 @@ export default function Nav() {
                         </NavLink>
                     </div>
                     <div className='wrapper-user-info'>
-                        <p className='username'>Hi! {authContext.userContext.username}</p>
-                        <p className='user-role'>Role: {authContext.userContext.role}</p>
+                        {username && <p className='username'>Hi! {username}</p>}
+                        {role && <p className='user-role'>Role: {role}</p>}
                     </div>
                     <div className='logout'>
 
-                        <NavLink to="/login" onClick={authContext.logout}>
+                        <Link to={isAuthenticated ? "/" : "/login"} onClick={isAuthenticated ? () => handleClickLogout() : () => {}}>
                             <span className='nav-icon'>
                                 <i className="fa-solid fa-right-from-bracket"></i>
                             </span>
-                            Log out
-                        </NavLink>
+                            {isAuthenticated ? 'Log out' : 'Login'}
+                            
+                        </Link>
                     </div>
                 </div>
             }

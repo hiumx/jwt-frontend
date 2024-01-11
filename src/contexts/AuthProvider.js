@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { getInfoAccount } from "../services/userService";
+import { setAuthToken } from "../config/axios";
 
 const { createContext, useState, useContext, useEffect } = require("react");
 
@@ -31,6 +32,7 @@ const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         const fetchInfoAccount = async () => {
+            setAuthToken();
             const resData = await getInfoAccount();
             if(resData.responseCode === 0) {
                 const userInfo = {
@@ -42,7 +44,7 @@ const AuthProvider = ({ children }) => {
                 setUserContext(userInfo);
             } else if(resData.responseCode === -1) {
                 setUserContext({...userContext, isAuthenticated: false});
-                navigate('/login');
+                navigate('/');
             }
         }
         fetchInfoAccount();

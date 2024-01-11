@@ -26,7 +26,7 @@ const ManagerUser = () => {
             try {
                 const res = await getAllUsers(pageShow, limitShow);
                 setListUsers(res.responseData.users);
-                setCountPage(res.responseData.pageCount)
+                setCountPage(res.responseData.pageCount);
             } catch (error) {
                 console.log(error);
             }

@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import './Login.scss';
 import { userLogin } from '../../services/userService';
 import { AuthContext } from '../../contexts/AuthProvider';
+import { setAuthToken } from '../../config/axios';
 
 export default function Login() {
     const navigate = useNavigate();
@@ -34,21 +35,26 @@ export default function Login() {
 
     const handleClickLogin = async () => {
         if (validateInputLogin()) {
-            const resData = await userLogin(keyLogin, password);
-            if (+resData.responseCode === 0) {
-                toast.success(resData.responseMessage);
-
-                authContext.login({
-                    isAuthenticated: true,
-                    role: resData.responseData.userData.name,
-                    username: resData.responseData.username,
-                    accessToken: resData.responseData.accessToken
-                });
-
-                navigate('/users');
-            } else if (+resData.responseCode === -1) {
-                toast.error(resData.responseMessage);
+            try {
+                const resData = await userLogin(keyLogin, password);
+                if (+resData.responseCode === 0) {
+                    localStorage.setItem('jwtToken', resData.responseData.accessToken);
+                    setAuthToken(resData.responseData.accessToken);
+                    toast.success(resData.responseMessage);
+                    authContext.login({
+                        isAuthenticated: true,
+                        role: resData.responseData.userData.name,
+                        username: resData.responseData.username,
+                        accessToken: resData.responseData.accessToken
+                    });
+                    navigate('/users');
+                } else if (+resData.responseCode === -1) {
+                    toast.error(resData.responseMessage);
+                }
+            } catch (error) {
+                console.log(error);
             }
+
         }
     }
 

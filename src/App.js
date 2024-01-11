@@ -1,14 +1,14 @@
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './App.scss';
-import Nav from './components/Nav/Nav';
+import NavHeader from './components/NavHeader/NavHeader';
 import AppRoutes from './routes/AppRoutes';
 
 function App() {
   
   return (
     <div className="app-container">
-      <Nav /> 
+      <NavHeader /> 
       <AppRoutes /> 
 
       <ToastContainer
